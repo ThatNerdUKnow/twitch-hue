@@ -9,8 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "color-convert": "^2.0.1",
+    "dotenv": "^8.2.0",
+    "hue-hacking-node": "^1.6.1",
     "hue-node": "^1.0.6",
+    "node-hue-api": "^4.0.9",
     "tmi.js": "^1.5.0"
   }
 }
