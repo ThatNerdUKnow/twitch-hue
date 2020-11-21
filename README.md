@@ -26,6 +26,6 @@ node index.js
 ```
 
 ## Commands
-Visit your twitch channel's chat and use
+Visit your twitch channel's chat and type
 ```!lights ```
 then whatever color you want to change the lights to
