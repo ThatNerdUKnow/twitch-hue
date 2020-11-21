@@ -24,3 +24,8 @@ Or
 ```
 node index.js
 ```
+
+## Commands
+Visit your twitch channel's chat and use
+```!lights ```
+then whatever color you want to change the lights to
