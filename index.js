@@ -45,7 +45,7 @@ function onMessageHandler(target, context, msg, self) {
     setTimeout(()=>{
       usersList.forEach((username,i)=>{
         if (username == context.username) {
-          usersList = usersList.splice(i, i);
+          usersList = usersList.splice(i, 1);
         }
         //console.log(usersList);
         
