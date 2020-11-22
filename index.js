@@ -5,6 +5,7 @@ const hue = require("hue-node");
 const axios = require("axios").default;
 var convert = require("color-convert");
 
+
 const opts = {
   identity: {
     username: process.env.TWITCH_NAME,
@@ -24,13 +25,15 @@ var usersList = [];
 function onMessageHandler(target, context, msg, self) {
   var message = { target, context, msg, self };
 
+  if(self)
+  {
+    return;
+  }
+  console.log("Is self?",self);
   msg = msg.toLowerCase();
   var args = msg.split(" ");
   var command = args[0];
-  console.log(args);
   args = args.splice(1);
-  console.log("Args");
-  console.log(args);
   console.log(chalk.bgBlue(context.username + ":") + " " + chalk.blue(msg));
 
   if (
@@ -45,23 +48,36 @@ function onMessageHandler(target, context, msg, self) {
 
     client.say(
       target,
-      `Hey, ${context.username}, To change the color of ${process.env.CHANNEL_WATCH}'s lights, just type !lights then the color you want them to change to. Go ahead, give it a try!`
+      `Hey, ${context.username}, To change the color of ${process.env.CHANNEL_WATCH}'s lights, just type !lights then the color you want them to change to. Go ahead, give it a try! You know you want to LUL`
     );
 
     // Remove the user from the list after an hour
     setTimeout(() => {
-      usersList.forEach((username, i) => {
-        if (username == context.username) {
-          usersList = usersList.splice(i, 1);
+      var temp = [];
+      usersList.forEach((username) => {
+        if (username != context.username) {
+          temp.push(username);
         }
-      });
-    }, 36000000);
+      },
+      usersList = temp,
+      console.log(chalk.bgRed(`removed ${context.username} from users list, the next time they talk, hueybot will tell them about the !lights command`))
+      );
+    }, 36000000); // Previously 36000000
   }
-  if (msg.substr(0, 7).includes("!lights")) {
-    color = msg.substr(8, msg.length);
+
+  if (command === "!lights" && args.length >= 1) {
+    //color = msg.substr(8, msg.length);
+    try{
+    color = args.join(" ");
     var huey = convert.keyword.hsl(color);
     setLights(huey[0], 255, 255, target);
     client.say(target, `Lights changed to ${color}`);
+    }
+    catch(err)
+    {
+      console.log(err);
+      client.say(target,"There was a problem and I couldn't set the lights NotLikeThis");
+    }
   }
 }
 
