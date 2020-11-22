@@ -1,4 +1,5 @@
 const tmi = require("tmi.js");
+const chalk = require("chalk");
 require("dotenv").config();
 const hue = require("hue-node");
 const axios = require("axios").default;
@@ -23,46 +24,42 @@ var usersList = [];
 function onMessageHandler(target, context, msg, self) {
   var message = { target, context, msg, self };
 
-  console.log(context.username + ": " + msg);
-
-  if (context.username != process.env.TWITCH_NAME) {
-    //client.say(target,`Hi ${context.username}`)
-  }
+  msg = msg.toLowerCase();
+  var args = msg.split(" ");
+  var command = args[0];
+  console.log(args);
+  args = args.splice(1);
+  console.log("Args");
+  console.log(args);
+  console.log(chalk.bgBlue(context.username + ":") + " " + chalk.blue(msg));
 
   if (
     !usersList.includes(context.username) &&
     context.username != process.env.TWITCH_NAME
   ) {
     usersList.push(context.username);
-    
+
     var index = usersList.length - 1;
 
     console.log(usersList);
 
-    client.say(target,`Hey, ${context.username}, To change the color of ${process.env.CHANNEL_WATCH}'s lights, just type !lights then the color you want them to change to. Go ahead, give it a try!`);
+    client.say(
+      target,
+      `Hey, ${context.username}, To change the color of ${process.env.CHANNEL_WATCH}'s lights, just type !lights then the color you want them to change to. Go ahead, give it a try!`
+    );
 
     // Remove the user from the list after an hour
-    setTimeout(()=>{
-      usersList.forEach((username,i)=>{
+    setTimeout(() => {
+      usersList.forEach((username, i) => {
         if (username == context.username) {
           usersList = usersList.splice(i, 1);
         }
-        //console.log(usersList);
-        
-      })
-    },36000000)
-    
-
-   
+      });
+    }, 36000000);
   }
-
-  console.log(msg.substr(0, 6));
   if (msg.substr(0, 7).includes("!lights")) {
     color = msg.substr(8, msg.length);
-
     var huey = convert.keyword.hsl(color);
-    
-
     setLights(huey[0], 255, 255, target);
     client.say(target, `Lights changed to ${color}`);
   }
@@ -71,12 +68,7 @@ function onMessageHandler(target, context, msg, self) {
 function onConnectedHandler(addr, port) {
   console.log("Connected to channel");
   target = "#withenex";
-
-
-  
-  /*setInterval(()=>{
-    client.say(target,`To change the color of ${process.env.CHANNEL_WATCH}'s lights, just type !lights then the color you want them to change to. Go ahead, give it a try!`);
-  },60000);*/
+  client.say(target,"Hey everybody how's it goin?")
 }
 
 function setLights(h, s, l, target) {

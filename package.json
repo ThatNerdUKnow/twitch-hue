@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
+    "chalk": "^4.1.0",
     "color-convert": "^2.0.1",
     "dotenv": "^8.2.0",
     "hue-hacking-node": "^1.6.1",
