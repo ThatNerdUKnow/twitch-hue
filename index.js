@@ -29,7 +29,6 @@ function onMessageHandler(target, context, msg, self) {
   {
     return;
   }
-  console.log("Is self?",self);
   msg = msg.toLowerCase();
   var args = msg.split(" ");
   var command = args[0];
@@ -42,9 +41,7 @@ function onMessageHandler(target, context, msg, self) {
   ) {
     usersList.push(context.username);
 
-    var index = usersList.length - 1;
-
-    console.log(usersList);
+    
 
     client.say(
       target,
@@ -52,17 +49,18 @@ function onMessageHandler(target, context, msg, self) {
     );
 
     // Remove the user from the list after an hour
-    setTimeout(() => {
+
+    setTimeout((name) => {
       var temp = [];
       usersList.forEach((username) => {
-        if (username != context.username) {
+        if (username != name) {
           temp.push(username);
         }
       },
       usersList = temp,
       console.log(chalk.bgRed(`removed ${context.username} from users list, the next time they talk, hueybot will tell them about the !lights command`))
       );
-    }, 36000000); // Previously 36000000
+    }, 36000000,context.username); // Previously 36000000
   }
 
   if (command === "!lights" && args.length >= 1) {
@@ -70,13 +68,13 @@ function onMessageHandler(target, context, msg, self) {
     try{
     color = args.join(" ");
     var huey = convert.keyword.hsl(color);
-    setLights(huey[0], 255, 255, target);
+    setLights(huey[0], huey[1],100, target);
     client.say(target, `Lights changed to ${color}`);
     }
     catch(err)
     {
       console.log(err);
-      client.say(target,"There was a problem and I couldn't set the lights NotLikeThis");
+      client.say(target,`There was a problem and I couldn't set the lights to ${color} NotLikeThis`);
     }
   }
 }
@@ -84,13 +82,15 @@ function onMessageHandler(target, context, msg, self) {
 function onConnectedHandler(addr, port) {
   console.log("Connected to channel");
   target = "#withenex";
-  client.say(target,"Hey everybody how's it goin?")
+  client.say(target,`Hey Everybody, this is ${process.env.TWITCH_NAME} reporting for duty CoolCat`)
 }
 
 function setLights(h, s, l, target) {
+  console.log(h,s,l);
   var group = 1;
   h *= Math.round(65535 / 360);
-  console.log(h);
+  s *= Math.round(254/100);
+  l *= Math.round(254/100);
   var url = `http://${process.env.BRIDGE_IP}/api/${process.env.HUE_UNAME}/groups/${group}/action`;
   axios.put(url, { hue: h, sat: s, bri: l }).then((res) => {});
 }
