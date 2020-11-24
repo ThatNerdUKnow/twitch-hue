@@ -48,7 +48,7 @@ function onMessageHandler(target, context, msg, self) {
       `Hey, ${context.username}, To change the color of ${process.env.CHANNEL_WATCH}'s lights, just type !lights then the color you want them to change to. Go ahead, give it a try! You know you want to LUL`
     );
 
-    // Remove the user from the list after an hour
+    // Remove the user from the list after thirty minutes
     setTimeout((name) => {
       var temp = [];
       usersList.forEach((username) => {
@@ -57,9 +57,10 @@ function onMessageHandler(target, context, msg, self) {
         }
       },
       usersList = temp,
-      console.log(chalk.bgRed(`removed ${context.username} from users list, the next time they talk, hueybot will tell them about the !lights command`))
+      console.log(chalk.bgRed(`removed ${context.username} from users list, the next time they talk, ${process.env.TWITCH_NAME} will tell them about the !lights command`)),
+      console.log("Users List:",usersList)
       );
-    }, 36000000,context.username); // Previously 36000000
+    }, 1800000,context.username); // Previously 1800000
   }
 
   if (command === "!lights" && args.length >= 1) {
@@ -93,8 +94,8 @@ function setLights(h, s, l, target) {
   console.log(h,s,l);
   var group = 1;
   h *= Math.round(65535 / 360);
-  s = s/100 * 254;
-  l = l/100 * 254;
+  s = Math.round(s/100 * 254);
+  l = Math.round(l/100 * 254);
   console.log(h,s,l);
   var url = `http://${process.env.BRIDGE_IP}/api/${process.env.HUE_UNAME}/groups/${group}/action`;
   axios.put(url, { hue: h, sat: s, bri: l }).then((res) => {
