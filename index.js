@@ -49,7 +49,6 @@ function onMessageHandler(target, context, msg, self) {
     );
 
     // Remove the user from the list after an hour
-
     setTimeout((name) => {
       var temp = [];
       usersList.forEach((username) => {
@@ -77,6 +76,11 @@ function onMessageHandler(target, context, msg, self) {
       client.say(target,`There was a problem and I couldn't set the lights to ${color} NotLikeThis`);
     }
   }
+
+  if(command === "!list")
+  {
+    console.log(usersList);
+  }
 }
 
 function onConnectedHandler(addr, port) {
@@ -89,8 +93,11 @@ function setLights(h, s, l, target) {
   console.log(h,s,l);
   var group = 1;
   h *= Math.round(65535 / 360);
-  s *= Math.round(254/100);
-  l *= Math.round(254/100);
+  s = s/100 * 254;
+  l = l/100 * 254;
+  console.log(h,s,l);
   var url = `http://${process.env.BRIDGE_IP}/api/${process.env.HUE_UNAME}/groups/${group}/action`;
-  axios.put(url, { hue: h, sat: s, bri: l }).then((res) => {});
+  axios.put(url, { hue: h, sat: s, bri: l }).then((res) => {
+    console.log(res.data);
+  });
 }
